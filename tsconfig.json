@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "module": "ESNext",
+        "moduleResolution": "node",
+        "target": "es2022"
+    },
+    "ts-node": {
+        "esm": true
+    },
+}
