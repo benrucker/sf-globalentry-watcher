@@ -2,24 +2,35 @@
   "name": "sf-globalentry-watcher",
   "version": "1.0.0",
   "description": "A simple script to check for interview times at the SF GlobalEntry location.",
-  "main": "index.ts",
+  "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "ts-node  index.ts"
+    "build": "tsc",
+    "dev": "ts-node src/index.ts"
   },
   "repository": {
-    "type": "git",
-    "url": "."
+    "type": "git"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.3.1",
     "node-fetch": "^3.3.2",
     "runtypes": "^6.7.0",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.2.2"
+    "ts-node": "^10.9.1"
   },
   "devDependencies": {
-    "prettier": "^3.0.3"
+    "@babel/core": "^7.22.17",
+    "@babel/preset-env": "^7.22.15",
+    "@typescript-eslint/eslint-plugin": "^6.6.0",
+    "@typescript-eslint/parser": "^6.6.0",
+    "@types/node": "^20.6.0",
+    "eslint": "^8.49.0",
+    "prettier": "^3.0.3",
+    "tslib": "^2.6.2",
+    "typescript": "^5.2.2"
+  },
+  "prettier": {
+    "trailingComma": "all"
   }
 }
