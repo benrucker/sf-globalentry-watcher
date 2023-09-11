@@ -2,7 +2,15 @@
 
 # SFO GlobalEntry Watcher
 
-A simple script to check for SFO GlobalEntry interview timeslots.
+A simple script to check for SFO GlobalEntry interview timeslots. I used it to grab an interview slot for the next day!
+
+People sometimes cancel their interviews, leaving a new opening for someone else to schedule themselves into. I saw about a dozen cancellations happen on one Sunday afternoon/evening. Most of these were snapped up within a few minutes, some even in under a minute. So I recommend opening the [TTP login page](https://ttp.cbp.dhs.gov/) and babysitting the script for a few hours while doing something else on your computer. Be ready to act the moment a good time opens up!
+
+There are other tools out there that do the same thing, but they cost money :(
+
+# Usage
+
+This script is built to check for availability once per minute and log the results to a Discord webhook. The reason for sending it to Discord was for push notification support!
 
 ## Setup
 
