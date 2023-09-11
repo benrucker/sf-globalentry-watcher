@@ -1,13 +1,22 @@
-# sf-globalentry-watcher
+<img width="300" align="right" src="https://github.com/benrucker/sf-globalentry-watcher/assets/12519846/0f73e883-ce71-4768-89d0-5fa2ff19c6dd" />
+
+# SFO GlobalEntry Watcher
 
 A simple script to check for SFO GlobalEntry interview timeslots.
 
 ## Setup
 
 1. `npm install`
-2. `npm run dev` or `ts-node-esm src/index`
+2. Make a file called `.env`
+3. Set your Discord webhook URL to the environment variable `WEBHOOK_URL` in that file:
+```sh
+WEBHOOK_URL="https://discord.com/api/webhooks/<CHANNEL ID>/<TOKEN>"
+```
+4. Run with `npm run dev` or `ts-node-esm src/index` 
 
 ## Cron setup
+
+> Instructions for automatically checking the status every minute.
 
 1. Make a file called `cron-runnable.sh` with these contents:
 
