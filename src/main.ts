@@ -6,50 +6,55 @@ import { TimeSlotsResponse } from "./types/TimeSlotsResponse.js";
 
 const SFO_API_URL =
   "https://ttp.cbp.dhs.gov/schedulerapi/slot-availability?locationId=5446";
-
 const RESULT_FILENAME = "lastResult";
-
 const EMPTY_RESULTS_STRING = "{}";
 
 export async function main() {
   const timeSlots = await fetchTimeSlots();
-  const haveResultsChanged = await compareResults(timeSlots);
+  const firstTimeslot = timeSlots.availableSlots[0];
+
+  const haveResultsChanged = await compareResults(firstTimeslot);
   if (haveResultsChanged) {
-    await sendDiscordMessage(buildWebhookRequestBody(timeSlots));
+    await sendDiscordMessage(buildWebhookRequestBody(firstTimeslot));
   } else {
     console.log("No change since last run");
   }
 }
 
 async function fetchTimeSlots() {
-  const request = await fetch(SFO_API_URL);
-  const response = await request.json();
-  return TimeSlotsResponse.check(response);
+  const repsonse = await fetch(SFO_API_URL);
+  const data = await repsonse.json();
+  return TimeSlotsResponse.check(data);
 }
 
-async function compareResults(newTimeSlots: TimeSlotsResponse) {
-  const firstTimeSlot = newTimeSlots.availableSlots[0];
-  const newResult =
-    firstTimeSlot != null
-      ? JSON.stringify(firstTimeSlot)
-      : EMPTY_RESULTS_STRING;
-
+async function compareResults(timeSlot: TimeSlot | undefined) {
   await touchResultsFile();
 
+  const newResult =
+    timeSlot != null ? JSON.stringify(timeSlot) : EMPTY_RESULTS_STRING;
   const lastResult = (await readFile(RESULT_FILENAME)).toString();
+
   console.log("last", lastResult);
   console.log("new", newResult);
+
   if (newResult !== lastResult) {
     await writeFile(RESULT_FILENAME, newResult);
     return true;
   }
+
   return false;
 }
 
 async function touchResultsFile() {
   try {
     await writeFile(RESULT_FILENAME, EMPTY_RESULTS_STRING, { flag: "wx" });
-  } catch (error) {}
+  } catch (error) {
+    if (error instanceof Error && error.message.startsWith("EEXIST")) {
+      // No-op
+    } else {
+      console.error(error);
+    }
+  }
 }
 
 async function sendDiscordMessage(content: string) {
@@ -70,20 +75,20 @@ async function sendDiscordMessage(content: string) {
   outputStream(response.status, response.statusText, response.body?.read());
 }
 
-function buildWebhookRequestBody(timeSlots: TimeSlotsResponse) {
-  const nextTimeSlot = timeSlots.availableSlots[0];
-
+function buildWebhookRequestBody(timeSlot: TimeSlot | undefined) {
   const content =
-    nextTimeSlot == null
+    timeSlot == null
       ? "No time slot available"
-      : `Next slot: ${getprettyTimeSlotRepresentation(nextTimeSlot)}`;
+      : `Next slot: ${formatTimestamp(timeSlot.startTimestamp)}`;
 
   return JSON.stringify({
     content,
   });
 }
 
-function getprettyTimeSlotRepresentation(timeSlot: TimeSlot) {
-  const start = new Date(timeSlot.startTimestamp);
-  return `${start.toLocaleDateString()} at ${start.toLocaleTimeString()}`;
+function formatTimestamp(timestamp: string) {
+  const start = new Date(timestamp);
+  return `${start.toDateString()} at ${start.toLocaleTimeString(undefined, {
+    timeStyle: "short",
+  })}`;
 }
