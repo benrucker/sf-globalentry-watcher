@@ -2,9 +2,9 @@
 
 # SFO GlobalEntry Watcher
 
-A simple script to check for SFO GlobalEntry interview timeslots. I used it to grab an interview slot for the next day!
+A simple script to check for SFO GlobalEntry interview timeslots.
 
-People sometimes cancel their interviews, leaving a new opening for someone else to schedule themselves into. I saw about a dozen cancellations happen on one Sunday afternoon/evening. Most of these were snapped up within a few minutes, some even in under a minute. So I recommend opening the [TTP login page](https://ttp.cbp.dhs.gov/) and babysitting the script for a few hours while doing something else on your computer. Be ready to act the moment a good time opens up!
+People sometimes cancel their interviews, leaving a new opening for someone else to schedule themselves into. Most openings are snapped up within a few minutes (or faster). So I recommend opening the [TTP login page](https://ttp.cbp.dhs.gov/) and babysitting the script for a few hours while doing something else on your computer. Be ready to act the moment a good time opens up!
 
 There are other tools out there that do the same thing, but they cost money :(
 
@@ -17,10 +17,12 @@ This script is built to check for availability once per minute and log the resul
 1. `npm install`
 2. Make a file called `.env`
 3. Set your Discord webhook URL to the environment variable `WEBHOOK_URL` in that file:
+
 ```sh
 WEBHOOK_URL="https://discord.com/api/webhooks/<CHANNEL ID>/<TOKEN>"
 ```
-4. Run with `npm run dev` or `ts-node-esm src/index` 
+
+4. Run with `npm run dev` or `ts-node-esm src/index`
 
 ## Cron setup
 
@@ -33,13 +35,18 @@ WEBHOOK_URL="https://discord.com/api/webhooks/<CHANNEL ID>/<TOKEN>"
 PATH=PASTE_PATH_HERE
 npm run dev
 ```
+
 2. Run `echo $PATH`, copy and paste the output to the second line of `cron-runnable.sh`
-    - `cron` doesn't use your user's path when executing commands, despite using your user's permissions level
-4. Run `crontab -e`
-5. Enter something like this line:
+   - `cron` doesn't use your user's path when executing commands, despite using your user's permissions level
+3. Run `crontab -e`
+4. Enter something like this line:
+
 ```sh
 * * * * *      cd /absolute/path/to/sf-globalentry-watcher && ./cron-runnable.sh > /tmp/ge-watcher.log 2>&1
-# The asterisks mean "At every minute, run the command" 
+# The asterisks mean "At every minute, run the command"
 # You could instead change them to `0 * * * *` which would mean "On every hour, run the command"
 ```
+
 5. Live monitor the script output with `watch /tmp/ge-watcher.log`
+
+> You don't have to use `cron`, of course - feel free to run this in a loop in your terminal. Just don't DoS the server; you know how fragile government websites can be!
