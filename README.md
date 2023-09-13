@@ -14,15 +14,43 @@ This script is built to check for availability once per minute and log the resul
 
 ## Setup
 
-1. `npm install`
-2. Make a file called `.env`
-3. Set your Discord webhook URL to the environment variable `WEBHOOK_URL` in that file:
+1. Clone this repository
+
+```sh
+git clone https://github.com/benrucker/sf-globalentry-watcher
+```
+
+2. Navigate to the repo
+
+```sh
+cd sf-globalentry-watcher
+```
+
+3. Install the dependencies
+
+```sh
+npm install
+```
+
+4. Make a new file called `.env`
+5. Generate a Discord webhook URL
+   1. Right click a text channel and click "Edit Channel"
+   2. Go to "Integrations" -> "Webhooks" -> "New Webhook" -> "Copy Webhook URL"
+6. Paste the URL in `.env` following `WEBHOOK_URL=` (with quotes around it)
 
 ```sh
 WEBHOOK_URL="https://discord.com/api/webhooks/<CHANNEL ID>/<TOKEN>"
 ```
 
-4. Run with `npm run dev` or `ts-node-esm src/index`
+8. Testrun the application
+
+```sh
+npm run dev
+# or
+ts-node-esm src/index
+```
+
+9. The program should hit the API and send a message to the webhook with a time (like `"Next slot: Wed Sep 13 2023 at 7:30 AM"`) or a notice that no times are available (like `"No time slot available"`)
 
 ## Cron setup
 
